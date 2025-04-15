@@ -35,7 +35,9 @@ const (
 	RequestTimeout    = 500 * time.Millisecond
 )
 func checkHealth(endpoint Endpoint) {
-	var client = &http.Client{}
+	var client = &http.Client{
+		Timeout: RequestTimeout,
+	}
 
 	bodyBytes, err := json.Marshal(endpoint)
 	if err != nil {
