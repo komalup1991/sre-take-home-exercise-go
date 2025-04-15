@@ -29,6 +29,9 @@ type DomainStats struct {
 
 var stats = make(map[string]*DomainStats)
 
+const (
+	RequestTimeout    = 500 * time.Millisecond
+)
 func checkHealth(endpoint Endpoint) {
 	var client = &http.Client{}
 
@@ -48,12 +51,20 @@ func checkHealth(endpoint Endpoint) {
 		req.Header.Set(key, value)
 	}
 
+	start := time.Now()
 	resp, err := client.Do(req)
+	// to calculate total time passed since req
+	duration := time.Since(start)
 	domain := extractDomain(endpoint.URL)
 
 	stats[domain].Total++
-	if err == nil && resp.StatusCode >= 200 && resp.StatusCode < 300 {
+	if err == nil && resp.StatusCode >= 200 && resp.StatusCode < 300 && duration <= RequestTimeout {
 		stats[domain].Success++
+	} else if err != nil {
+		//Extra logging incase of error or other response
+		log.Printf("Request to %s failed: %v with duration: %v)\n", endpoint.URL, err, duration)
+	} else {
+		log.Printf("Request to %s returned %d in %v (unavailable)\n", endpoint.URL, resp.StatusCode, duration)
 	}
 }
 
