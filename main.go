@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"log"
 	"math"
+	"net"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 	"time"
@@ -68,9 +70,17 @@ func checkHealth(endpoint Endpoint) {
 	}
 }
 
-func extractDomain(url string) string {
-	urlSplit := strings.Split(url, "//")
-	domain := strings.Split(urlSplit[len(urlSplit)-1], "/")[0]
+// Using url.Parse for better parsing
+func extractDomain(rawURL string) string {
+	parsed, err := url.Parse(rawURL)
+	if err != nil {
+		return rawURL
+	}
+	domain := parsed.Host
+	//ignoring port no
+	if host, _, err := net.SplitHostPort(domain); err == nil {
+		return host
+	}
 	return domain
 }
 
