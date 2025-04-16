@@ -1,0 +1,32 @@
+- name: sample body up
+  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/body
+  method: POST
+  headers:
+    content-type: application/json
+  body: '{"foo":"bar"}'
+
+- name: sample index up
+  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/
+
+- name: sample body down
+  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/body
+  method: POST
+  headers:
+    content-type: application/json
+  body: "{}"
+
+- name: sample error down
+  url: https://dev-sre-take-home-exercise-rubric.us-east-1.recruiting-public.fetchrewards.com/error
+
+- name: slow endpoint
+  url: https://httpstat.us/200?sleep=1000
+
+- name: fast endpoint
+  url: https://httpstat.us/204
+
+- name: not found
+  url: https://httpstat.us/404
+
+- name: invalid method
+  url: https://httpstat.us/200
+  method: FOO
