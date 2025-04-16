@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"strings"
 	"time"
 
 	"gopkg.in/yaml.v3"
@@ -33,7 +32,9 @@ var stats = make(map[string]*DomainStats)
 
 const (
 	RequestTimeout    = 500 * time.Millisecond
+	DefaultHTTPMethod = "GET"
 )
+
 func checkHealth(endpoint Endpoint) {
 	var client = &http.Client{
 		Timeout: RequestTimeout,
@@ -42,6 +43,11 @@ func checkHealth(endpoint Endpoint) {
 	bodyBytes, err := json.Marshal(endpoint)
 	if err != nil {
 		return
+	}
+
+	//validation check if no method is given to clarify default is GET
+	if endpoint.Method == "" {
+		endpoint.Method = DefaultHTTPMethod
 	}
 	reqBody := bytes.NewReader(bodyBytes)
 
