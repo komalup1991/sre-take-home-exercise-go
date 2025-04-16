@@ -30,8 +30,10 @@ type DomainStats struct {
 
 var stats = make(map[string]*DomainStats)
 
+// Replacing hardcoded values with constants
 const (
 	RequestTimeout    = 500 * time.Millisecond
+	CheckInterval     = 15 * time.Second
 	DefaultHTTPMethod = "GET"
 )
 
@@ -105,7 +107,7 @@ func monitorEndpoints(endpoints []Endpoint) {
 			checkHealth(endpoint)
 		}
 		logResults()
-		time.Sleep(15 * time.Second)
+		time.Sleep(CheckInterval)
 	}
 }
 
